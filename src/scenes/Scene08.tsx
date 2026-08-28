@@ -3,7 +3,7 @@ import { AnimalGlyph } from '../components/AnimalGlyph'
 import { SceneIllustration } from '../components/SceneIllustration'
 import { SceneShell } from '../components/SceneShell'
 
-type FilterId = 'all' | 'aviar' | 'boxa' | 'baie' | 'bazin'
+type FilterId = 'all' | 'plaja' | 'coasta-est' | 'vizuina' | 'golf'
 
 type Animal = {
   id: string
@@ -26,7 +26,7 @@ const ANIMALS: Animal[] = [
     id: 'a1',
     name: 'Tessa',
     kind: 'Țestoasă',
-    room: 'Baia caldă',
+    room: 'Plaja de nord',
     emoji: '🐢',
     status: 'Recuperare',
     daysInCare: 6,
@@ -34,13 +34,13 @@ const ANIMALS: Animal[] = [
     diet: 'Alge + legume',
     nextCheck: 'Mâine, 09:00',
     note: 'Carapace tratată · evoluție bună',
-    zone: 'baie',
+    zone: 'plaja',
   },
   {
     id: 'a2',
     name: 'Kiko',
     kind: 'Papagal',
-    room: 'Voliera tropicală',
+    room: 'Coasta est',
     emoji: '🦜',
     status: 'În tratament',
     daysInCare: 4,
@@ -48,13 +48,13 @@ const ANIMALS: Animal[] = [
     diet: 'Semințe + fructe',
     nextCheck: 'Azi, 16:30',
     note: 'Aripa stângă imobilizată',
-    zone: 'aviar',
+    zone: 'coasta-est',
   },
   {
     id: 'a3',
     name: 'Ruxi',
     kind: 'Vulpe',
-    room: 'Adăpostul de pădure',
+    room: 'Vizuina',
     emoji: '🦊',
     status: 'Hidratare',
     daysInCare: 2,
@@ -62,13 +62,13 @@ const ANIMALS: Animal[] = [
     diet: 'Carne slabă + apă',
     nextCheck: 'Azi, 14:00',
     note: 'Hidratare în curs · apetit slab',
-    zone: 'boxa',
+    zone: 'vizuina',
   },
   {
     id: 'a4',
     name: 'Nori',
     kind: 'Delfin',
-    room: 'Bazinul marin',
+    room: 'Golf sud',
     emoji: '🐬',
     status: 'Monitorizare',
     daysInCare: 3,
@@ -76,13 +76,13 @@ const ANIMALS: Animal[] = [
     diet: 'Pește proaspăt',
     nextCheck: 'Mâine, 11:00',
     note: 'Monitorizare post-intervenție',
-    zone: 'bazin',
+    zone: 'golf',
   },
   {
     id: 'a5',
     name: 'Pico',
     kind: 'Pescăruș',
-    room: 'Voliera de coastă',
+    room: 'Coasta est',
     emoji: '🐦',
     icon: '/pico-seagull.svg',
     status: 'Observație',
@@ -91,7 +91,7 @@ const ANIMALS: Animal[] = [
     diet: 'Pește mic',
     nextCheck: 'Poimâine, 10:00',
     note: 'Observație · fără tratament activ',
-    zone: 'aviar',
+    zone: 'coasta-est',
   },
 ]
 
@@ -100,10 +100,10 @@ const HIDDEN_ON_ALL_ID = 'a5'
 
 const FILTERS: { id: FilterId; label: string }[] = [
   { id: 'all', label: 'Toate' },
-  { id: 'aviar', label: 'Volieră' },
-  { id: 'boxa', label: 'Adăpost' },
-  { id: 'baie', label: 'Baie' },
-  { id: 'bazin', label: 'Bazin' },
+  { id: 'plaja', label: 'Plaja de nord' },
+  { id: 'coasta-est', label: 'Coasta est' },
+  { id: 'vizuina', label: 'Vizuina' },
+  { id: 'golf', label: 'Golf sud' },
 ]
 
 function applyFilter(filter: FilterId): Animal[] {
@@ -147,7 +147,7 @@ export function Scene08() {
       <div className="scene-layout">
         <div className="panel-box">
           <div className="panel-head">
-            <h3>Lista pacienților</h3>
+            <h3>Lista pacienților pe zone</h3>
             <span
               className="chip"
               data-bug-zone={bugActive ? 'bug-08' : undefined}
@@ -200,9 +200,7 @@ export function Scene08() {
             <div>
               <strong style={{ fontSize: '1.2rem' }}>{selected.name}</strong>
               <div className="muted">{selected.kind}</div>
-              <div className="muted" style={{ marginTop: '0.25rem' }}>
-                {selected.room}
-              </div>
+              <strong style={{ marginTop: '0.25rem' }}>{selected.room}</strong>
             </div>
           </div>
 

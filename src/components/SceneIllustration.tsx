@@ -6,10 +6,10 @@ type Props = {
   caption?: string
 }
 
-/** Cropped scene image that expands in place on hover to show the full picture. */
+/** Scene image at its natural dimensions (no crop or hover zoom). */
 export function SceneIllustration({ src, alt, caption }: Props) {
   return (
-    <div className="scene-illustration" title="Treci cu mouse-ul pentru imaginea completă">
+    <div className="scene-illustration">
       <img src={publicAsset(src)} alt={alt} />
       {caption ? <span className="caption">{caption}</span> : null}
     </div>

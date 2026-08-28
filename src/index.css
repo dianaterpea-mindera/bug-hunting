@@ -2855,30 +2855,23 @@ ul {
 /* —— Scene illustrations —— */
 
 .scene-illustration {
-  --cursor-lupa: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='10' cy='10' r='6.5' stroke='%231a6b7a' stroke-width='2' fill='%23ffffff'/%3E%3Cline x1='14.8' y1='14.8' x2='20.5' y2='20.5' stroke='%231a6b7a' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E") 10 10, pointer;
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   border-radius: 20px;
   overflow: hidden;
   position: relative;
   line-height: 0;
   margin-bottom: 0;
   box-shadow: 0 12px 32px rgba(11, 61, 74, 0.22);
-  cursor: var(--cursor-lupa);
-  z-index: 1;
-  transition: z-index 0s;
 }
 
 .scene-illustration > img {
-  width: 100%;
+  width: auto;
   height: auto;
+  max-width: 100%;
   display: block;
   border-radius: 20px;
   border: 2px solid rgba(26, 107, 122, 0.12);
-  object-fit: cover;
-  max-height: 460px;
-  transition:
-    max-height 0.28s ease,
-    box-shadow 0.28s ease;
 }
 
 .scene-illustration .caption {
@@ -2895,24 +2888,6 @@ ul {
   border-radius: 0 0 18px 18px;
   pointer-events: none;
   transition: opacity 0.2s ease;
-}
-
-/* Expand full image in place within the scene view */
-@media (hover: hover) and (pointer: fine) {
-  .scene-illustration:hover {
-    overflow: visible;
-    z-index: 40;
-  }
-
-  .scene-illustration:hover > img {
-    max-height: none;
-    object-fit: contain;
-    box-shadow: 0 22px 48px rgba(11, 61, 74, 0.38);
-  }
-
-  .scene-illustration:hover .caption {
-    opacity: 0;
-  }
 }
 
 /* —— Scene 10: observation binoculars —— */

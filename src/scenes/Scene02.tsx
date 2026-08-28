@@ -107,7 +107,7 @@ export function Scene02() {
             </span>
           ))}
 
-          <span className="map-pin map-pin--minor" style={{ left: '76%', top: '22%' }}>
+          <span className="map-pin map-pin--minor" style={{ left: '70%', top: '25%' }}>
             <IslandMapLandmarkIcon kind="watchtower" className="map-landmark-icon map-landmark-icon--sm" />
             <span className="pin-label">Turn</span>
           </span>
