@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { SceneIllustration } from '../components/SceneIllustration'
 import { SceneShell } from '../components/SceneShell'
+import { publicAsset } from '../lib/publicAsset'
 
 type CareKey = 'food' | 'water' | 'shelter'
 
@@ -114,7 +115,7 @@ export function Scene06() {
                 {section.emoji} {section.label}
               </h3>
               <div className="ruxi-portrait">
-                <img src={portrait.src} alt={portrait.alt} />
+                <img src={publicAsset(portrait.src)} alt={portrait.alt} />
               </div>
               <p className="ruxi-caption">{portrait.caption}</p>
               <button

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { SceneIllustration } from '../components/SceneIllustration'
 import { SceneShell } from '../components/SceneShell'
 import { useGame } from '../context/GameContext'
+import { publicAsset } from '../lib/publicAsset'
 
 type Stamp = 'ok' | 'warn'
 
@@ -287,7 +288,7 @@ export function Scene11() {
                       onClick={() => openPhoto(photo.id)}
                       aria-label={`Deschide ${photo.title}`}
                     >
-                      <img src={photo.src} alt={photo.alt} draggable={false} />
+                      <img src={publicAsset(photo.src)} alt={photo.alt} draggable={false} />
                     </button>
                     {stamp ? (
                       <button
@@ -376,7 +377,7 @@ export function Scene11() {
                   const photo = PHOTOS.find((p) => p.id === entry.photoId)!
                   return (
                     <li key={entry.photoId} className="dossier-item">
-                      <img src={photo.src} alt="" />
+                      <img src={publicAsset(photo.src)} alt="" />
                       <div className="dossier-item-meta">
                         <strong>{photo.title}</strong>
                         <span
@@ -496,7 +497,7 @@ export function Scene11() {
                 {dossierProblems.length > 0 ? (
                   <div className="habitat-report-annex">
                     <img
-                      src="/scene11-shelter-ok.png?v=4"
+                      src={publicAsset('/scene11-shelter-ok.png?v=4')}
                       alt="Adăpost aparent intact folosit ca dovadă în raport"
                     />
                     <div>
@@ -572,7 +573,7 @@ export function Scene11() {
                 </button>
                 <div className="polaroid-viewer-card">
                 <div className="polaroid-viewer-photo">
-                  <img src={viewing.src} alt={viewing.alt} />
+                  <img src={publicAsset(viewing.src)} alt={viewing.alt} />
                   {draftStamp ? (
                     <span
                       className={`viewer-stamp ${draftStamp === 'ok' ? 'ok' : 'warn'}`}

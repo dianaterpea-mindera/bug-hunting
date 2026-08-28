@@ -1,3 +1,5 @@
+import { publicAsset } from '../lib/publicAsset'
+
 type AnimalGlyphProps = {
   emoji: string
   icon?: string
@@ -9,7 +11,7 @@ export function AnimalGlyph({ emoji, icon, big = false }: AnimalGlyphProps) {
   if (icon) {
     return (
       <span className={big ? 'big animal-glyph-wrap' : 'animal-emoji animal-glyph-wrap'}>
-        <img src={icon} alt="" className="animal-glyph" />
+        <img src={publicAsset(icon)} alt="" className="animal-glyph" />
       </span>
     )
   }

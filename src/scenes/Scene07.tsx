@@ -1,6 +1,7 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { SceneIllustration } from '../components/SceneIllustration'
 import { SceneShell } from '../components/SceneShell'
+import { publicAsset } from '../lib/publicAsset'
 
 type CutStep = {
   progress: number
@@ -140,7 +141,7 @@ export function Scene07() {
             className="nori-portrait"
             data-bug-zone={showBugZone ? 'bug-07' : undefined}
           >
-            <img src={step.src} alt={step.alt} className="nori-portrait-img" />
+            <img src={publicAsset(step.src)} alt={step.alt} className="nori-portrait-img" />
           </div>
 
           <p className="nori-caption">{step.caption}</p>

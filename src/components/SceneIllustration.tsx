@@ -1,3 +1,5 @@
+import { publicAsset } from '../lib/publicAsset'
+
 type Props = {
   src: string
   alt: string
@@ -8,7 +10,7 @@ type Props = {
 export function SceneIllustration({ src, alt, caption }: Props) {
   return (
     <div className="scene-illustration" title="Treci cu mouse-ul pentru imaginea completă">
-      <img src={src} alt={alt} />
+      <img src={publicAsset(src)} alt={alt} />
       {caption ? <span className="caption">{caption}</span> : null}
     </div>
   )

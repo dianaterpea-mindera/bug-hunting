@@ -9,6 +9,7 @@ import {
 import { createPortal } from 'react-dom'
 import { SceneIllustration } from '../components/SceneIllustration'
 import { SceneShell } from '../components/SceneShell'
+import { publicAsset } from '../lib/publicAsset'
 
 type JournalPhoto = {
   id: string
@@ -567,7 +568,7 @@ export function Scene12() {
                     style={{ touchAction: 'none' }}
                   >
                     <div className="journal-card-open" aria-hidden={isDragging}>
-                      <img src={photo.src} alt={photo.alt} draggable={false} />
+                      <img src={publicAsset(photo.src)} alt={photo.alt} draggable={false} />
                     </div>
                     <div className="journal-card-meta">
                       <strong>{photo.time}</strong>
@@ -625,7 +626,7 @@ export function Scene12() {
                       >
                         <div className="journal-slot-thumb">
                           <img
-                            src={placed.src}
+                            src={publicAsset(placed.src)}
                             alt={placed.alt}
                             draggable={false}
                           />
@@ -713,7 +714,7 @@ export function Scene12() {
               style={{ width: drag.width }}
               aria-hidden
             >
-              <img src={draggingPhoto.src} alt="" draggable={false} />
+              <img src={publicAsset(draggingPhoto.src)} alt="" draggable={false} />
               <div className="journal-drag-ghost-meta">
                 <strong>{draggingPhoto.time}</strong>
                 <span>{draggingPhoto.title}</span>
@@ -758,7 +759,7 @@ export function Scene12() {
                     className="polaroid-viewer-photo"
                     data-bug-zone={viewing.buggy ? 'bug-12' : undefined}
                   >
-                    <img src={viewing.src} alt={viewing.alt} />
+                    <img src={publicAsset(viewing.src)} alt={viewing.alt} />
                     <span className="viewer-counter">
                       {canNavigateViewer
                         ? `${viewingIndex + 1} / ${viewerOrder.length}`
