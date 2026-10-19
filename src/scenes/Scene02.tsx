@@ -101,6 +101,7 @@ export function Scene02() {
               key={landmark.id}
               className="map-pin"
               style={{ left: landmark.left, top: landmark.top }}
+              data-bug-zone={landmark.bugZone ? 'bug-02' : undefined}
             >
               <IslandMapLandmarkIcon kind={landmark.kind} className="map-landmark-icon" />
               <span className="pin-label">{landmark.label}</span>

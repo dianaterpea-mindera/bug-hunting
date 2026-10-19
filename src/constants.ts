@@ -6,16 +6,23 @@ export const INSTRUCTOR_PIN = '2468'
 export const STORAGE_KEY = 'bug-hunting-data'
 export const ACTIVE_SESSION_KEY = 'bug-hunting-active'
 
+/** Demo player with a completed run — used from the instructor panel to replay the game. */
+export const DEMO_PLAYER_NAME = 'MaxPoints'
+
 export const INSTRUCTIONS_STEP = {
   id: 'instructions',
   emoji: '📋',
   title: 'Instrucțiuni',
 } as const
 
-export const POINTS = {
-  find: 100,
-  report: 50,
-  firstTryBonus: 25,
+/**
+ * Scor pe ecran în stele:
+ * - stea plină = găsit din prima (maxim)
+ * - jumătate de stea = găsit după greșeli
+ */
+export const STARS = {
+  full: 1,
+  half: 0.5,
 } as const
 
 /** Padding around the bug zone so kids don’t need pixel-perfect edges. */

@@ -129,11 +129,19 @@ export type IslandLandmark = {
   label: string
   left: string
   top: string
+  bugZone?: boolean
 }
 
 export const ISLAND_LANDMARKS: IslandLandmark[] = [
   { id: 'plaja', kind: 'pier', label: 'Plaja nord', left: '16%', top: '26%' },
-  { id: 'testoase-bug', kind: 'clinic', label: 'Centru salvare', left: '70%', top: '46%' },
+  {
+    id: 'testoase-bug',
+    kind: 'clinic',
+    label: 'Centru salvare',
+    left: '70%',
+    top: '46%',
+    bugZone: true,
+  },
   { id: 'padure', kind: 'jungle', label: 'Pădure', left: '44%', top: '38%' },
   { id: 'testoase', kind: 'turtle', label: 'Țestoase', left: '24%', top: '66%' },
   { id: 'vizuina', kind: 'fox-cave', label: 'Vizuina', left: '46%', top: '74%' },

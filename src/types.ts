@@ -54,10 +54,12 @@ export type AppView =
   | 'instructions'
   | 'game'
   | 'journal'
+  | 'certificate'
   | 'instructor-login'
   | 'instructor'
   | 'review'
   | 'qa-reveal'
+  | 'presentation'
 
 export type SceneMeta = {
   id: string

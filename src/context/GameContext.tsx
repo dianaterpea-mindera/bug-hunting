@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { INSTRUCTOR_PIN, SCENES } from '../constants'
+import { DEMO_PLAYER_NAME, INSTRUCTOR_PIN, SCENES } from '../constants'
 import { scoreForCorrectReport } from '../lib/scoring'
 import {
   applyUploadedUrls,
@@ -40,11 +40,19 @@ export function getFrontierSceneIndex(session: GameSession): number {
   return firstIncomplete
 }
 
+/** True when the mission is fully done (or all scenes were already cleared). */
+export function isSessionFinished(session: GameSession): boolean {
+  if (session.completedAt) return true
+  return SCENES.every((s) => session.scenesCompleted.includes(s.id))
+}
+
 export function isSceneNavigable(
   session: GameSession,
   index: number,
 ): boolean {
   if (index < 0 || index >= SCENES.length) return false
+  // Finished runs can freely revisit every scene (marks stay on).
+  if (isSessionFinished(session)) return true
   return index <= getFrontierSceneIndex(session)
 }
 
@@ -60,6 +68,7 @@ type GameContextValue = {
   ) => Promise<{ ok: true } | { ok: false; error: string }>
   resetGame: () => void
   resumeSession: (id: string) => void
+  enterAsDemoPlayer: () => Promise<{ ok: true } | { ok: false; error: string }>
   currentSceneIndex: number
   goToScene: (index: number) => void
   markSceneComplete: () => Promise<void>
@@ -176,10 +185,38 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setView(found.completedAt ? 'journal' : 'game')
   }, [])
 
+  /** Load the MaxPoints demo run and browse the full game with scenes marked. */
+  const enterAsDemoPlayer = useCallback(async () => {
+    await refreshSessions()
+    const target = DEMO_PLAYER_NAME.trim().toLowerCase()
+    const found = getAllSessionsLocal().find(
+      (s) => s.childName.trim().toLowerCase() === target,
+    )
+    if (!found) {
+      return {
+        ok: false as const,
+        error: `Nu există sesiunea „${DEMO_PLAYER_NAME}". Verifică lista sau reîncarcă.`,
+      }
+    }
+
+    const next: GameSession = {
+      ...found,
+      currentSceneIndex: 0,
+      // Ensure completion UI (incl. certificate) works even if cloud row lacks completedAt.
+      completedAt:
+        found.completedAt ??
+        (isSessionFinished(found) ? new Date().toISOString() : undefined),
+    }
+    setActiveSessionId(next.id)
+    await persist(next)
+    setView('certificate')
+    return { ok: true as const }
+  }, [persist, refreshSessions])
+
   const goToScene = useCallback(
     (index: number) => {
       const current = sessionRef.current
-      if (!current || current.completedAt) return
+      if (!current) return
       if (!isSceneNavigable(current, index)) return
       if (current.currentSceneIndex === index) return
       void persist({ ...current, currentSceneIndex: index })
@@ -199,6 +236,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
         await persist({ ...session, currentSceneIndex: nextIndex })
         return
       }
+      if (isSessionFinished(session)) {
+        setView('certificate')
+        return
+      }
       const frontier = getFrontierSceneIndex(session)
       if (frontier !== session.currentSceneIndex) {
         await persist({ ...session, currentSceneIndex: frontier })
@@ -214,7 +255,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
         scenesCompleted,
         completedAt: new Date().toISOString(),
       })
-      setView('journal')
+      setView('certificate')
       return
     }
 
@@ -313,6 +354,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       startGame,
       resetGame,
       resumeSession,
+      enterAsDemoPlayer,
       currentSceneIndex: session?.currentSceneIndex ?? 0,
       goToScene,
       markSceneComplete,
@@ -333,6 +375,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       startGame,
       resetGame,
       resumeSession,
+      enterAsDemoPlayer,
       goToScene,
       markSceneComplete,
       recordAttempt,

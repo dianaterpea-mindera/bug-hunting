@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <title>QA slide backgrounds only</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; }
+    .bg {
+      width: 1920px; height: 1080px; display: none; position: relative; overflow: hidden;
+    }
+    .bg.is-active { display: block; }
+
+    /* shared deco */
+    .blob { position: absolute; border-radius: 50%; filter: blur(2px); }
+    .dot {
+      position: absolute; width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,.35);
+    }
+    .ring {
+      position: absolute; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,.12);
+    }
+    .stripe {
+      position: absolute; height: 14px; border-radius: 999px;
+      background: linear-gradient(90deg, rgba(240,199,94,.0), rgba(240,199,94,.55), rgba(240,199,94,.0));
+      transform: rotate(-8deg);
+    }
+    .grid {
+      position: absolute; inset: 0; opacity: .08;
+      background-image:
+        linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+    .corner-tag {
+      position: absolute; width: 220px; height: 220px; border-radius: 40px;
+      border: 4px dashed rgba(255,255,255,.15); transform: rotate(12deg);
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,0));
+    }
+
+    /* 0 dark ocean */
+    .t0 { background: linear-gradient(155deg, #072f38 0%, #0b3d4a 40%, #145868 70%, #0a3038 100%); }
+    .t0 .b1 { width: 700px; height: 700px; left: -180px; top: -220px; background: radial-gradient(circle, rgba(58,154,173,.55), transparent 70%); }
+    .t0 .b2 { width: 600px; height: 600px; right: -120px; bottom: -160px; background: radial-gradient(circle, rgba(224,122,95,.4), transparent 70%); }
+    .t0 .b3 { width: 400px; height: 400px; left: 40%; top: 50%; background: radial-gradient(circle, rgba(240,199,94,.18), transparent 70%); }
+
+    /* 1 reveal deep + gold */
+    .t1 { background: linear-gradient(140deg, #041c22, #0b3d4a 50%, #1a6b7a); }
+    .t1 .b1 { width: 900px; height: 900px; left: 50%; top: 50%; transform: translate(-50%,-50%); background: radial-gradient(circle, rgba(240,199,94,.28), transparent 65%); }
+    .t1 .b2 { width: 500px; height: 500px; right: -100px; top: -100px; background: radial-gradient(circle, rgba(58,154,173,.4), transparent 70%); }
+
+    /* 2 light foam */
+    .t2 { background: linear-gradient(165deg, #d7f0ec, #eef8f6 50%, #f7ebe3); }
+    .t2 .b1 { width: 700px; height: 700px; left: -100px; top: -150px; background: radial-gradient(circle, rgba(58,154,173,.35), transparent 70%); }
+    .t2 .b2 { width: 500px; height: 500px; right: -80px; bottom: -100px; background: radial-gradient(circle, rgba(224,122,95,.28), transparent 70%); }
+    .t2 .grid { opacity: .05; background-image:
+      linear-gradient(rgba(11,61,74,.4) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11,61,74,.4) 1px, transparent 1px); }
+
+    /* 3 quest dark teal */
+    .t3 { background: linear-gradient(160deg, #0b3d4a, #124a56 45%, #1a6b7a); }
+    .t3 .b1 { width: 800px; height: 400px; left: -100px; bottom: -80px; background: radial-gradient(circle, rgba(82,183,136,.25), transparent 70%); }
+    .t3 .b2 { width: 500px; height: 500px; right: 5%; top: -10%; background: radial-gradient(circle, rgba(240,199,94,.22), transparent 70%); }
+
+    /* 4 case files warm light */
+    .t4 { background: linear-gradient(160deg, #f4efe6, #e8f6f4 60%, #f7e4d8); }
+    .t4 .b1 { width: 600px; height: 600px; left: -120px; top: 40%; background: radial-gradient(circle, rgba(224,122,95,.22), transparent 70%); }
+    .t4 .b2 { width: 500px; height: 500px; right: -100px; top: -80px; background: radial-gradient(circle, rgba(58,154,173,.25), transparent 70%); }
+
+    /* 5 logic dark */
+    .t5 { background: linear-gradient(150deg, #0a2430, #0b3d4a 55%, #163f4d); }
+    .t5 .b1 { width: 700px; height: 700px; left: 20%; top: -30%; background: radial-gradient(circle, rgba(224,122,95,.3), transparent 70%); }
+    .t5 .b2 { width: 500px; height: 500px; right: -10%; bottom: -20%; background: radial-gradient(circle, rgba(58,154,173,.35), transparent 70%); }
+
+    /* 6 traps light mint */
+    .t6 { background: linear-gradient(165deg, #e3f5ec, #eef8f6 40%, #fdeee8); }
+    .t6 .b1 { width: 650px; height: 650px; right: -150px; top: -100px; background: radial-gradient(circle, rgba(82,183,136,.35), transparent 70%); }
+    .t6 .b2 { width: 500px; height: 500px; left: -100px; bottom: -120px; background: radial-gradient(circle, rgba(224,122,95,.25), transparent 70%); }
+
+    /* 7 phone wall dark */
+    .t7 { background: linear-gradient(155deg, #062229, #0b3d4a 50%, #1a4f5c); }
+    .t7 .b1 { width: 900px; height: 500px; left: -200px; top: 40%; background: radial-gradient(circle, rgba(58,154,173,.35), transparent 70%); }
+    .t7 .b2 { width: 400px; height: 400px; right: 10%; top: 10%; background: radial-gradient(circle, rgba(240,199,94,.2), transparent 70%); }
+
+    /* 8 day light */
+    .t8 { background: linear-gradient(165deg, #e8f6f4, #f3fbf9 50%, #fff4e8); }
+    .t8 .b1 { width: 800px; height: 300px; left: 10%; top: 40%; background: linear-gradient(90deg, rgba(240,199,94,.25), rgba(224,122,95,.2), rgba(58,154,173,.25)); filter: blur(40px); border-radius: 100px; }
+
+    /* 9 chaos coral */
+    .t9 { background: linear-gradient(145deg, #c45c42 0%, #e07a5f 40%, #0b3d4a 100%); }
+    .t9 .b1 { width: 700px; height: 700px; left: -150px; top: -150px; background: radial-gradient(circle, rgba(240,199,94,.35), transparent 70%); }
+    .t9 .b2 { width: 500px; height: 500px; right: -100px; bottom: -100px; background: radial-gradient(circle, rgba(11,61,74,.45), transparent 70%); }
+
+    /* 10 powers dark vibrant */
+    .t10 { background: linear-gradient(160deg, #0b3d4a, #145868 40%, #0f3d4a); }
+    .t10 .b1 { width: 400px; height: 400px; left: 5%; top: 30%; background: radial-gradient(circle, rgba(58,154,173,.45), transparent 70%); }
+    .t10 .b2 { width: 400px; height: 400px; left: 30%; top: 40%; background: radial-gradient(circle, rgba(224,122,95,.35), transparent 70%); }
+    .t10 .b3 { width: 400px; height: 400px; left: 55%; top: 30%; background: radial-gradient(circle, rgba(82,183,136,.35), transparent 70%); }
+    .t10 .b4 { width: 400px; height: 400px; right: 0; top: 40%; background: radial-gradient(circle, rgba(240,199,94,.35), transparent 70%); }
+
+    /* 11 path soft */
+    .t11 { background: linear-gradient(165deg, #e8f6f4, #f7f3ea); }
+    .t11 .b1 { width: 600px; height: 600px; left: -100px; bottom: -100px; background: radial-gradient(circle, rgba(58,154,173,.3), transparent 70%); }
+    .t11 .b2 { width: 600px; height: 600px; right: -100px; top: -100px; background: radial-gradient(circle, rgba(224,122,95,.25), transparent 70%); }
+
+    /* 12 finale celebration */
+    .t12 { background: linear-gradient(150deg, #06262f, #0b3d4a 45%, #145868); }
+    .t12 .b1 { width: 1000px; height: 1000px; left: 50%; top: 40%; transform: translate(-50%,-50%); background: radial-gradient(circle, rgba(240,199,94,.3), transparent 60%); }
+    .t12 .b2 { width: 400px; height: 400px; left: 10%; top: 60%; background: radial-gradient(circle, rgba(224,122,95,.35), transparent 70%); }
+    .t12 .b3 { width: 350px; height: 350px; right: 8%; top: 15%; background: radial-gradient(circle, rgba(58,154,173,.4), transparent 70%); }
+  </style>
+</head>
+<body>
+  <div class="bg t0 is-active" data-i="0"><div class="grid"></div><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="ring" style="width:280px;height:280px;right:12%;top:18%"></div><div class="stripe" style="width:500px;left:30%;top:70%"></div><div class="dot" style="left:20%;top:30%"></div><div class="dot" style="left:70%;top:25%"></div><div class="dot" style="left:55%;top:80%"></div><div class="corner-tag" style="right:8%;bottom:10%"></div></div>
+  <div class="bg t1" data-i="1"><div class="blob b1"></div><div class="blob b2"></div><div class="ring" style="width:360px;height:360px;left:12%;top:20%"></div><div class="orb" style="width:120px;height:120px;right:18%;top:22%"></div><div class="dot" style="left:40%;top:70%"></div><div class="dot" style="left:80%;top:60%"></div></div>
+  <div class="bg t2" data-i="2"><div class="grid"></div><div class="blob b1"></div><div class="blob b2"></div><div class="ring" style="width:240px;height:240px;left:70%;top:55%;border-color:rgba(11,61,74,.12)"></div><div class="stripe" style="width:400px;left:10%;top:25%;background:linear-gradient(90deg,transparent,rgba(58,154,173,.35),transparent)"></div></div>
+  <div class="bg t3" data-i="3"><div class="grid"></div><div class="blob b1"></div><div class="blob b2"></div><div class="dot" style="left:15%;top:20%"></div><div class="dot" style="left:85%;top:30%"></div><div class="dot" style="left:50%;top:85%"></div><div class="stripe" style="width:600px;left:20%;top:15%"></div></div>
+  <div class="bg t4" data-i="4"><div class="blob b1"></div><div class="blob b2"></div><div class="corner-tag" style="left:5%;top:8%;border-color:rgba(196,92,66,.2)"></div><div class="corner-tag" style="right:5%;bottom:8%;border-color:rgba(58,154,173,.2);transform:rotate(-10deg)"></div></div>
+  <div class="bg t5" data-i="5"><div class="grid"></div><div class="blob b1"></div><div class="blob b2"></div><div class="stripe" style="width:700px;left:15%;top:80%"></div></div>
+  <div class="bg t6" data-i="6"><div class="blob b1"></div><div class="blob b2"></div><div class="ring" style="width:300px;height:300px;left:40%;top:30%;border-color:rgba(45,106,79,.15)"></div></div>
+  <div class="bg t7" data-i="7"><div class="grid"></div><div class="blob b1"></div><div class="blob b2"></div><div class="dot" style="left:25%;top:15%"></div><div class="dot" style="left:75%;top:75%"></div></div>
+  <div class="bg t8" data-i="8"><div class="blob b1"></div><div class="ring" style="width:200px;height:200px;left:8%;top:15%;border-color:rgba(11,61,74,.1)"></div><div class="ring" style="width:160px;height:160px;right:10%;bottom:15%;border-color:rgba(224,122,95,.15)"></div></div>
+  <div class="bg t9" data-i="9"><div class="blob b1"></div><div class="blob b2"></div><div class="grid"></div><div class="stripe" style="width:500px;left:40%;top:20%"></div><div class="dot" style="left:30%;top:40%"></div><div class="dot" style="left:60%;top:70%"></div></div>
+  <div class="bg t10" data-i="10"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div><div class="grid"></div></div>
+  <div class="bg t11" data-i="11"><div class="blob b1"></div><div class="blob b2"></div><div class="stripe" style="width:450px;left:30%;top:50%;background:linear-gradient(90deg,transparent,rgba(240,199,94,.4),transparent)"></div></div>
+  <div class="bg t12" data-i="12"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="dot" style="left:20%;top:25%;background:#f0c75e"></div><div class="dot" style="left:80%;top:30%;background:#e07a5f;width:12px;height:12px"></div><div class="dot" style="left:15%;top:70%;background:#3a9aad"></div><div class="dot" style="left:70%;top:75%;background:#52b788;width:10px;height:10px"></div><div class="dot" style="left:50%;top:15%;background:#f0c75e"></div><div class="ring" style="width:260px;height:260px;left:42%;top:55%"></div></div>
+  <script>
+    const idx = Math.max(0, Math.min(12, Number(new URLSearchParams(location.search).get('s') || 0)));
+    document.querySelectorAll('.bg').forEach((el, i) => el.classList.toggle('is-active', i === idx));
+  </script>
+</body>
+</html>

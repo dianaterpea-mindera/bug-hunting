@@ -8,7 +8,7 @@ const ITEMS: Item[] = [
   { id: 'food', label: 'Hrană', emoji: '🍎', required: 2 },
   { id: 'kit', label: 'Trusă medicală', emoji: '🩹', required: 1 },
   { id: 'blanket', label: 'Pătură', emoji: '🧣', required: 2 },
-  { id: 'radio', label: 'Radio portabil', emoji: '📻', required: 1 },
+  { id: 'radio', label: 'Stație radio', emoji: '📻', required: 1 },
   { id: 'water', label: 'Apă', emoji: '🧴', required: 3 },
   { id: 'light', label: 'Lanternă', emoji: '🔦', required: 2 },
 ]

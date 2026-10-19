@@ -89,8 +89,8 @@ export function Scene06() {
   return (
     <SceneShell sceneId="scene-06">
       <SceneIllustration
-        src="/scene06-fox.png"
-        alt="Pui de vulpe la intrarea în vizuină"
+        src="/scene06-ruxi-sad.jpg"
+        alt="Ruxi supărată la intrarea în vizuină"
         caption="Vizuina vest · puiul Ruxi · ~8 săptămâni"
       />
 

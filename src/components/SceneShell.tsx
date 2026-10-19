@@ -1,8 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { SCENES } from '../constants'
-import { useGame } from '../context/GameContext'
+import { isSessionFinished, useGame } from '../context/GameContext'
+import { isMaxSceneScore } from '../lib/scoring'
 import { captureElement } from '../lib/screenshots'
+import { SceneStar } from './Stars'
 import {
   areasEqual,
   getBugZoneAreas,
@@ -35,7 +37,9 @@ export function SceneShell({ sceneId, children }: Props) {
     area: Area
   } | null>(null)
   const [feedback, setFeedback] = useState<'wrong' | null>(null)
-  const [showReportedToast, setShowReportedToast] = useState(false)
+  const [reportedToast, setReportedToast] = useState<{
+    isMax: boolean
+  } | null>(null)
   const [busy, setBusy] = useState(false)
   const [foundHighlight, setFoundHighlight] = useState<Area[]>([])
 
@@ -106,7 +110,7 @@ export function SceneShell({ sceneId, children }: Props) {
     try {
       const screenshot =
         pendingShot?.screenshot || (await capturePromiseRef.current) || ''
-      await recordAttempt({
+      const { report } = await recordAttempt({
         sceneId,
         bugId: meta.bugId,
         selectedArea: area,
@@ -114,7 +118,9 @@ export function SceneShell({ sceneId, children }: Props) {
         screenshot,
         description,
       })
-      setShowReportedToast(true)
+      setReportedToast({
+        isMax: isMaxSceneScore(report?.attemptNumber ?? 1),
+      })
       setPendingShot(null)
       setSelection(null)
       setMode('play')
@@ -125,10 +131,10 @@ export function SceneShell({ sceneId, children }: Props) {
   }
 
   useEffect(() => {
-    if (!showReportedToast) return
-    const timer = window.setTimeout(() => setShowReportedToast(false), 10_000)
+    if (!reportedToast) return
+    const timer = window.setTimeout(() => setReportedToast(null), 10_000)
     return () => window.clearTimeout(timer)
-  }, [showReportedToast])
+  }, [reportedToast])
 
   useLayoutEffect(() => {
     if (!alreadyFound) {
@@ -210,7 +216,11 @@ export function SceneShell({ sceneId, children }: Props) {
             className="btn btn-success floating-action"
             onClick={() => void markSceneComplete()}
           >
-            {isLastScene ? 'Finalizare' : 'Continuă misiunea →'}
+            {isLastScene
+              ? session && isSessionFinished(session)
+                ? 'Vezi certificat'
+                : 'Finalizare'
+              : 'Continuă misiunea →'}
           </button>,
           document.body,
         )}
@@ -327,15 +337,28 @@ export function SceneShell({ sceneId, children }: Props) {
         />
       )}
 
-      {showReportedToast &&
+      {reportedToast &&
         createPortal(
-          <div className="toast" role="status" aria-live="polite">
-            <span>🐞 Bug raportat — misiunea poate continua.</span>
+          <div
+            className={`toast toast-stars${reportedToast.isMax ? ' toast-max' : ' toast-partial'}`}
+            role="status"
+            aria-live="polite"
+          >
+            <SceneStar
+              fill={reportedToast.isMax ? 'full' : 'half'}
+              size="md"
+              showLabel={false}
+            />
+            <span>
+              {reportedToast.isMax
+                ? 'Stea plină — ai găsit din prima!'
+                : 'Jumătate de stea — ai găsit, dar nu din prima.'}
+            </span>
             <button
               type="button"
               className="toast-close"
               aria-label="Închide"
-              onClick={() => setShowReportedToast(false)}
+              onClick={() => setReportedToast(null)}
             >
               ×
             </button>

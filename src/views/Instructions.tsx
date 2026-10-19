@@ -1,14 +1,11 @@
-import { POINTS, SCENES } from '../constants'
 import { PlayerShell } from '../components/PlayerShell'
+import { SceneStar } from '../components/Stars'
+import { SCENES } from '../constants'
 import { useGame } from '../context/GameContext'
 
 export function Instructions() {
   const { session, setView } = useGame()
   if (!session) return null
-
-  const firstTryTotal =
-    POINTS.find + POINTS.report + POINTS.firstTryBonus
-  const retryTotal = POINTS.find + POINTS.report
 
   return (
     <PlayerShell>
@@ -43,14 +40,16 @@ export function Instructions() {
             <div className="instructions-context-block">
               <strong>Cum se calculează scorul</strong>
               <p>
-                Primești puncte doar când găsești corect o problemă și o
-                descrii. Pentru fiecare ecran: {POINTS.find} puncte pentru
-                găsire, {POINTS.report} pentru raport — adică {retryTotal}{' '}
-                puncte. Dacă o prinzi din prima încercare, primești un bonus de{' '}
-                {POINTS.firstTryBonus} puncte ({firstTryTotal} în total).
-                Încercările greșite nu scad din scor; poți încerca din nou până
-                reușești. Scorul total apare sus, lângă progresul misiunii.
+                Scorul e în stele — câte una pe ecran. O{' '}
+                <strong>stea plină</strong> înseamnă că ai găsit problema din
+                prima. O <strong>jumătate de stea</strong> înseamnă că ai greșit
+                înainte și ai reușit ulterior. Încercările greșite nu îți iau
+                stele. Sus vezi toate stelele misiunii.
               </p>
+              <div className="instructions-stars-legend" aria-hidden>
+                <SceneStar fill="full" size="md" />
+                <SceneStar fill="half" size="md" />
+              </div>
             </div>
           </div>
 

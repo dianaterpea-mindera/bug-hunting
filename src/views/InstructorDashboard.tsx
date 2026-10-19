@@ -1,6 +1,12 @@
+import { useState } from 'react'
 import { EvidenceShot } from '../components/EvidenceShot'
-import { SCENES } from '../constants'
+import { MissionStars, SceneStar } from '../components/Stars'
+import { DEMO_PLAYER_NAME, SCENES } from '../constants'
 import { useGame } from '../context/GameContext'
+import {
+  starFillForAttempt,
+  starFillsForSession,
+} from '../lib/scoring'
 import { deleteSession } from '../lib/storage'
 import { evidenceScreenshot, formatDuration } from '../lib/utils'
 
@@ -13,7 +19,10 @@ export function InstructorDashboard() {
     setSelectedInstructorSessionId,
     selectedInstructorSessionId,
     cloudEnabled,
+    enterAsDemoPlayer,
   } = useGame()
+  const [demoError, setDemoError] = useState<string | null>(null)
+  const [enteringDemo, setEnteringDemo] = useState(false)
 
   const selected = selectedInstructorSessionId
     ? sessions.find((s) => s.id === selectedInstructorSessionId)
@@ -37,7 +46,12 @@ export function InstructorDashboard() {
             <div className="stat">
               🐞 {selected.bugReports.length}/{SCENES.length}
             </div>
-            <div className="stat">⭐ {selected.score}</div>
+            <div className="stat stat-stars">
+              <MissionStars
+                fills={starFillsForSession(selected.bugReports)}
+                size="md"
+              />
+            </div>
             <div className="stat">
               ⏱️ {formatDuration(selected.startedAt, selected.completedAt)}
             </div>
@@ -45,6 +59,7 @@ export function InstructorDashboard() {
           {selected.bugReports.map((report) => {
             const scene = SCENES.find((s) => s.id === report.sceneId)
             const shot = evidenceScreenshot(report)
+            const fill = starFillForAttempt(report.attemptNumber)
             return (
               <div key={report.id} className="report-block">
                 <h3>
@@ -52,9 +67,14 @@ export function InstructorDashboard() {
                 </h3>
                 {shot && <EvidenceShot src={shot} />}
                 <p>„{report.description}”</p>
-                <p className="muted">
-                  Încercarea {report.attemptNumber} · +{report.score} XP
-                </p>
+                <div className="report-score-row">
+                  <SceneStar fill={fill} size="md" />
+                  {report.attemptNumber > 1 ? (
+                    <span className="muted">
+                      încercarea {report.attemptNumber}
+                    </span>
+                  ) : null}
+                </div>
               </div>
             )
           })}
@@ -73,8 +93,32 @@ export function InstructorDashboard() {
           <button type="button" className="btn btn-secondary" onClick={() => setView('review')}>
             👩‍🏫 Mod Review
           </button>
-          <button type="button" className="btn btn-success" onClick={() => setView('qa-reveal')}>
-            Revelație QA
+          <button
+            type="button"
+            className="btn btn-success"
+            onClick={() => setView('presentation')}
+          >
+            🎤 Prezentare QA
+          </button>
+          <button type="button" className="btn btn-ghost" onClick={() => setView('qa-reveal')}>
+            Revelație (scurtă)
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            disabled={enteringDemo}
+            onClick={() => {
+              setDemoError(null)
+              setEnteringDemo(true)
+              void enterAsDemoPlayer().then((result) => {
+                setEnteringDemo(false)
+                if (!result.ok) setDemoError(result.error)
+              })
+            }}
+          >
+            {enteringDemo
+              ? 'Se încarcă…'
+              : `🎮 Intră ca ${DEMO_PLAYER_NAME}`}
           </button>
           <button
             type="button"
@@ -87,6 +131,12 @@ export function InstructorDashboard() {
             Ieșire
           </button>
         </div>
+
+        {demoError && (
+          <p className="field-error" role="alert">
+            {demoError}
+          </p>
+        )}
 
         {!cloudEnabled && (
           <p className="instructor-note">
@@ -133,7 +183,15 @@ export function InstructorDashboard() {
                       <td onClick={() => setSelectedInstructorSessionId(s.id)}>
                         {s.bugReports.length}/{SCENES.length}
                       </td>
-                      <td onClick={() => setSelectedInstructorSessionId(s.id)}>{s.score}</td>
+                      <td
+                        className="instructor-stars-cell"
+                        onClick={() => setSelectedInstructorSessionId(s.id)}
+                      >
+                        <MissionStars
+                          fills={starFillsForSession(s.bugReports)}
+                          size="sm"
+                        />
+                      </td>
                       <td onClick={() => setSelectedInstructorSessionId(s.id)}>
                         {formatDuration(s.startedAt, s.completedAt)}
                       </td>
@@ -167,7 +225,12 @@ export function InstructorDashboard() {
                     <strong>{s.childName}</strong>
                     <div className="instructor-card-stats">
                       <span>🐞 {s.bugReports.length}/{SCENES.length}</span>
-                      <span>⭐ {s.score}</span>
+                      <span className="instructor-card-stars">
+                        <MissionStars
+                          fills={starFillsForSession(s.bugReports)}
+                          size="sm"
+                        />
+                      </span>
                       <span>⏱️ {formatDuration(s.startedAt, s.completedAt)}</span>
                     </div>
                   </button>
@@ -187,10 +250,6 @@ export function InstructorDashboard() {
             </div>
           </>
         )}
-
-        <p className="muted instructor-foot">
-          Pentru comparație pe scenă, deschide Mod Review.
-        </p>
       </div>
     </div>
   )
