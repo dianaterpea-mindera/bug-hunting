@@ -269,26 +269,66 @@ def build():
     chip(s, Inches(0.55), Inches(0.35), "🗂️  DOSARE", CORAL, WHITE)
     title(s, Inches(0.55), Inches(0.9), Inches(12), "Cazul #1: imaginea minte", 42, SEA_DEEP)
     subtitle(s, Inches(0.55), Inches(1.7), Inches(11), "Când ce scrie ≠ ce vezi. Classic sneaky bug.", MUTED)
+    crops = Path(__file__).resolve().parents[1] / "presentations" / "bug-crops"
     cases = [
-        ("SCENA 1", "🚤", "„Ai ajuns cu barca”", "🚗", "Pe ecran: mașină", "Text vs iconiță", CORAL),
-        ("SCENA 3", "🐢", "Tessa", "📋", "Fișa zice Tina", "Nume greșit", SEA_LIGHT),
-        ("SCENA 10", "🦜", "Kiko = papagal", "🙈", "Etichetă: Maimuță", "Specie greșită", LEAF),
+        (
+            "SCENA 1",
+            "🚤 „Ai ajuns cu barca”  ≠  🚗 pe ecran",
+            "🔍 Text vs iconiță",
+            CORAL,
+            crops / "bug-01-transport.png",
+        ),
+        (
+            "SCENA 3",
+            "🐢 Tessa  ≠  📋 fișa zice Tina",
+            "🔍 Nume greșit",
+            SEA_LIGHT,
+            crops / "bug-03-tessa-tina.png",
+        ),
+        (
+            "SCENA 10",
+            "🦜 Kiko = papagal  ≠  🙈 etichetă: Maimuță",
+            "🔍 Specie greșită",
+            LEAF,
+            crops / "bug-10-kiko-maimuta.png",
+        ),
     ]
-    for i, (tag, a, at, b, bt, clue, accent) in enumerate(cases):
+    for i, (tag, summary, clue, accent, shot) in enumerate(cases):
         x = Inches(0.45 + i * 4.25)
-        c = card(s, x, Inches(2.3), Inches(4.05), Inches(4.6), [("", 1, False, WHITE)], WHITE)
-        # rewrite with structure
+        # Background card (text sits in the top band; screenshot below)
+        sh = s.shapes.add_shape(
+            MSO_SHAPE.ROUNDED_RECTANGLE, x, Inches(2.2), Inches(4.05), Inches(4.85)
+        )
+        fill(sh, WHITE)
+        try:
+            sh.adjustments[0] = 0.12
+        except Exception:
+            pass
+        head = s.shapes.add_textbox(x + Inches(0.2), Inches(2.3), Inches(3.65), Inches(1.15))
         write(
-            c,
+            head,
             [
                 (tag, 12, True, accent),
-                (f"{a}  {at}", 16, True, SEA_DEEP, BODY, 16),
-                ("≠", 22, True, CORAL, BODY, 10),
-                (f"{b}  {bt}", 16, True, CORAL_DEEP, BODY, 8),
-                (f"🔍  {clue}", 14, True, MUTED, BODY, 16),
+                (summary, 13, True, SEA_DEEP, BODY, 8),
+                (clue, 12, True, MUTED, BODY, 6),
             ],
+            align=PP_ALIGN.CENTER,
+            valign=MSO_ANCHOR.TOP,
         )
-    notes(s, ["Review opțional: scenele 1, 3, 10."])
+        # Crop from the live app — only the buggy UI fragment
+        if shot.exists():
+            from PIL import Image as PILImage
+
+            with PILImage.open(shot) as im:
+                iw, ih = im.size
+            max_w = Inches(3.55)
+            max_h = Inches(3.0)
+            scale = min(max_w / iw, max_h / ih)
+            pw, ph = iw * scale, ih * scale
+            pic_left = x + (Inches(4.05) - pw) / 2
+            pic_top = Inches(3.55) + (max_h - ph) / 2
+            s.shapes.add_picture(str(shot), pic_left, pic_top, width=pw, height=ph)
+    notes(s, ["Review opțional: scenele 1, 3, 10.", "Screenshot-urile arată exact zona greșită din app."])
 
     # 5 Logic
     s = prs.slides.add_slide(blank)
@@ -296,61 +336,112 @@ def build():
     chip(s, Inches(0.55), Inches(0.35), "🧠  EROARE", GOLD, SEA_DEEP)
     title(s, Inches(0.55), Inches(0.9), Inches(12.2), "Cazul #2: creierul app-ului o ia razna", 36)
     logic = [
-        ("➡️", "Pădurea", "Dreapta → Centru", "Dreapta → Poiană ↑"),
-        ("💧", "Rucsacul", "3 sticle = ×3", "Contorul rămâne ×2"),
-        ("🏥", "Filtrul „Toate”", "5 animale", "4 pe listă — Pico 👻"),
+        (
+            "➡️  Pădurea",
+            "În joc: Dreapta → Poiană ↑",
+            crops / "bug-05-padure.png",
+        ),
+        (
+            "💧  Rucsacul",
+            "În joc: 3 sticle, contor ×2",
+            crops / "bug-04-rucsac.png",
+        ),
+        (
+            "🏥  Filtrul „Toate”",
+            "În joc: 5 pe chip, 4 pe listă",
+            crops / "bug-08-filtru.png",
+        ),
     ]
-    for i, (ico, name, ok, bad) in enumerate(logic):
+    for i, (heading, summary, shot) in enumerate(logic):
         x = Inches(0.45 + i * 4.25)
-        card(
-            s,
-            x,
-            Inches(2.2),
-            Inches(4.05),
-            Inches(4.7),
-            [
-                (f"{ico}  {name}", 22, True, WHITE, DISPLAY),
-                ("AR TREBUI", 11, True, GOLD, BODY, 18),
-                (ok, 16, True, FOAM, BODY, 6),
-                ("ÎN JOC", 11, True, CORAL, BODY, 16),
-                (bad, 16, True, WHITE, BODY, 6),
-            ],
-            SEA_DEEP,
+        sh = s.shapes.add_shape(
+            MSO_SHAPE.ROUNDED_RECTANGLE, x, Inches(2.15), Inches(4.05), Inches(4.9)
         )
-    notes(s, ["Review: scenele 5, 4, 8."])
+        fill(sh, SEA_DEEP)
+        try:
+            sh.adjustments[0] = 0.12
+        except Exception:
+            pass
+        head = s.shapes.add_textbox(x + Inches(0.2), Inches(2.25), Inches(3.65), Inches(0.95))
+        write(
+            head,
+            [
+                (heading, 18, True, WHITE, DISPLAY),
+                (summary, 13, True, FOAM, BODY, 6),
+            ],
+            align=PP_ALIGN.CENTER,
+            valign=MSO_ANCHOR.TOP,
+        )
+        if shot.exists():
+            from PIL import Image as PILImage
+
+            with PILImage.open(shot) as im:
+                iw, ih = im.size
+            max_w = Inches(3.55)
+            max_h = Inches(3.35)
+            scale = min(max_w / iw, max_h / ih)
+            pw, ph = iw * scale, ih * scale
+            pic_left = x + (Inches(4.05) - pw) / 2
+            pic_top = Inches(3.35) + (max_h - ph) / 2
+            s.shapes.add_picture(str(shot), pic_left, pic_top, width=pw, height=ph)
+    notes(s, ["Review: scenele 5, 4, 8.", "Screenshot-urile arată exact zona greșită din app."])
 
     # 6 Trust
     s = prs.slides.add_slide(blank)
     bg(s, 6)
     chip(s, Inches(0.55), Inches(0.35), "⚠️  TRAP ALERT", CORAL, WHITE)
-    title(s, Inches(0.55), Inches(0.9), Inches(12), "Nu crede bifa verde!", 48, SEA_DEEP)
-    subtitle(s, Inches(0.55), Inches(1.75), Inches(11), "App-ul zice OK. Realitatea zice „hmm…”", MUTED)
+    title(s, Inches(0.55), Inches(0.9), Inches(12), "Nu crede bifa verde!", 42, SEA_DEEP)
+    subtitle(s, Inches(0.55), Inches(1.7), Inches(11), "App-ul zice OK. Realitatea zice „hmm…”", MUTED)
     traps = [
-        ("„Gata, a băut apă”", "🦊", "Ruxi e tot însetată"),
-        ("Bot: Habitat apt", "🤖", "Dosarul are avertismente"),
-        ("„Eliberare 17:20”", "📸", "E poza de la prânz"),
+        (
+            "🦊  Ruxi + apa",
+            "✓ Băut apă — tot însetată",
+            crops / "bug-06-ruxi.png",
+        ),
+        (
+            "🤖  InspectorBot",
+            "✓ Habitat apt — cu avertismente",
+            crops / "bug-11-habitat.png",
+        ),
+        (
+            "📸  Eliberare 17:20",
+            "Etichetă eliberare — poză de prânz",
+            crops / "bug-12-eliberare.png",
+        ),
     ]
-    for i, (fake, ico, real) in enumerate(traps):
+    for i, (heading, summary, shot) in enumerate(traps):
         x = Inches(0.45 + i * 4.25)
-        top = card(
-            s,
-            x,
-            Inches(2.4),
-            Inches(4.05),
-            Inches(2.1),
-            [("✓", 28, True, LEAF), (fake, 16, True, SEA_DEEP, BODY, 8)],
-            SOFT_LEAF,
+        sh = s.shapes.add_shape(
+            MSO_SHAPE.ROUNDED_RECTANGLE, x, Inches(2.15), Inches(4.05), Inches(4.9)
         )
-        bot = card(
-            s,
-            x,
-            Inches(4.7),
-            Inches(4.05),
-            Inches(2.2),
-            [("REALITATEA", 11, True, GOLD), (f"{ico}  {real}", 18, True, WHITE, BODY, 10)],
-            SEA_DEEP,
+        fill(sh, WHITE)
+        try:
+            sh.adjustments[0] = 0.12
+        except Exception:
+            pass
+        head = s.shapes.add_textbox(x + Inches(0.2), Inches(2.25), Inches(3.65), Inches(0.95))
+        write(
+            head,
+            [
+                (heading, 16, True, SEA_DEEP, DISPLAY),
+                (summary, 12, True, CORAL_DEEP, BODY, 6),
+            ],
+            align=PP_ALIGN.CENTER,
+            valign=MSO_ANCHOR.TOP,
         )
-    notes(s, ["Scenele 6, 11, 12.", "Curaj să zici „asta nu e corect”."])
+        if shot.exists():
+            from PIL import Image as PILImage
+
+            with PILImage.open(shot) as im:
+                iw, ih = im.size
+            max_w = Inches(3.55)
+            max_h = Inches(3.35)
+            scale = min(max_w / iw, max_h / ih)
+            pw, ph = iw * scale, ih * scale
+            pic_left = x + (Inches(4.05) - pw) / 2
+            pic_top = Inches(3.35) + (max_h - ph) / 2
+            s.shapes.add_picture(str(shot), pic_left, pic_top, width=pw, height=ph)
+    notes(s, ["Scenele 6, 11, 12.", "Screenshot-urile arată exact zona greșită din app."])
 
     # 7 Real life
     s = prs.slides.add_slide(blank)
@@ -361,7 +452,7 @@ def build():
     apps = [
         ("🎮", "Jocuri", "Scorul nu se salvează", "QA: după Continua?"),
         ("💬", "Chat", "Mesaj dublu / nevăzut", "QA: ce vede celălalt?"),
-        ("📚", "Școală", "OK pe ecran, gol la prof", "QA: succes = realitate?"),
+        ("📚", "Școală", "Tema „trimisă” — profesoara n-o vede", "QA: ce vede profesoara?"),
         ("🛒", "Shop", "Ai plătit, itemul lipsește", "QA: banii → produs?"),
         ("🔔", "Notificări", "De 10 ori… sau deloc", "QA: prea mult / puțin?"),
         ("🚌", "Hărți", "„2 min” × 15 minute", "QA: e actualizat?"),

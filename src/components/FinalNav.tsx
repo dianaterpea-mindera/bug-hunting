@@ -1,3 +1,4 @@
+import { DEMO_PLAYER_NAME } from '../constants'
 import { useGame } from '../context/GameContext'
 import { ResetGameButton } from './ResetGameButton'
 
@@ -8,6 +9,10 @@ type Props = {
 export function FinalNav({ active }: Props) {
   const { session, setView, goToScene } = useGame()
   if (!session) return null
+
+  const isDemoPlayer =
+    session.childName.trim().toLowerCase() ===
+    DEMO_PLAYER_NAME.trim().toLowerCase()
 
   return (
     <div className="final-nav" role="navigation" aria-label="Navigare finală">
@@ -31,6 +36,15 @@ export function FinalNav({ active }: Props) {
           onClick={() => setView('certificate')}
         >
           Vezi certificat
+        </button>
+      ) : null}
+      {active === 'certificate' && isDemoPlayer ? (
+        <button
+          type="button"
+          className="btn btn-ghost"
+          onClick={() => setView('instructor')}
+        >
+          Panou instructor
         </button>
       ) : null}
     </div>

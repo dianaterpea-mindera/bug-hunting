@@ -168,7 +168,7 @@ tell application "Keynote"
 		my bodyText(s, 70, 160, 1600, 40, "Ridică mâna dacă ți s-a întâmplat măcar unul!", cFoam, 22)
 		my card(s, 40, 230, 600, 360, "🎮  Jocuri" & return & "Scorul nu se salvează" & return & return & "QA: după Continua?", cWhite, 22)
 		my card(s, 670, 230, 600, 360, "💬  Chat" & return & "Mesaj dublu / nevăzut" & return & return & "QA: ce vede celălalt?", cWhite, 22)
-		my card(s, 1300, 230, 570, 360, "📚  Școală" & return & "OK pe ecran, gol la prof" & return & return & "QA: succes = realitate?", cWhite, 20)
+		my card(s, 1300, 230, 570, 360, "📚  Școală" & return & "Tema „trimisă” — profesoara n-o vede" & return & return & "QA: ce vede profesoara?", cWhite, 20)
 		my card(s, 40, 630, 600, 360, "🛒  Shop" & return & "Ai plătit, itemul lipsește" & return & return & "QA: banii → produs?", cWhite, 22)
 		my card(s, 670, 630, 600, 360, "🔔  Notificări" & return & "De 10 ori… sau deloc" & return & return & "QA: prea mult / puțin?", cWhite, 22)
 		my card(s, 1300, 630, 570, 360, "🚌  Hărți" & return & "„2 min” × 15 minute" & return & return & "QA: e actualizat?", cWhite, 22)

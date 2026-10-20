@@ -438,8 +438,8 @@ const REAL_LIFE_CARDS: RealLifeCard[] = [
   {
     icon: '📚',
     where: 'Școală / teme',
-    bug: 'Ai predat tema, ecranul zice OK, dar la profesor nu e nimic',
-    qaAsk: '„Succes pe ecran = și în realitate?”',
+    bug: 'Ai predat tema online — profesoara zice „nu am primit-o”',
+    qaAsk: '„Ce vede profesoara pe ecranul ei?”',
   },
   {
     icon: '🛒',
